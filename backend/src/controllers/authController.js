@@ -9,10 +9,10 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days
 
 export const signUp = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, phone } = req.body;
-    if (!email || !password || !firstName || !lastName || !phone) {
+    const { email, password, firstname, lastname, phone } = req.body;
+    if (!email || !password || !firstname || !lastname || !phone) {
       return res.status(400).json({
-        message: 'Không thể thiếu email, password, firstName, lastName, phone',
+        message: 'Không thể thiếu email, password, firstname, lastname, phone',
       });
     }
     // Kiểm tra trùng lặp email, số điện thoại
@@ -27,7 +27,7 @@ export const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     // Tạo User mới
     await User.create({
-      fullname: `${lastName} ${firstName}`,
+      fullname: `${lastname} ${firstname}`,
       email,
       hashedPassword,
       phone,
@@ -42,32 +42,24 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({
-        message: 'Không thể thiếu email, password',
-      });
+    const { identifier, password } = req.body;
+    if (!identifier || !password) {
+      return res.status(400).json({ message: 'Không thể thiếu email/số điện thoại và password' });
     }
     // Kiểm tra tồn tại của user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ $or: [{ email: identifier }, { phone: identifier }] });
     if (!user) {
-      return res
-        .status(409)
-        .json({ message: 'Email hoặc Password không đúng!' });
+      return res.status(409).json({ message: 'Email hoặc Password không đúng!' });
     }
     // Kiểm tra password mã hóa từ databse
     const passwordCorrect = await bcrypt.compare(password, user.hashedPassword);
     if (!passwordCorrect) {
-      return res
-        .status(401)
-        .json({ message: 'Email hoặc Password không đúng!' });
+      return res.status(401).json({ message: 'Email hoặc Password không đúng!' });
     }
     // Nếu hợp lệ thì tạo accessToken
-    const accessToken = jwt.sign(
-      { userId: user._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCESS_TOKEN_TTL },
-    );
+    const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: ACCESS_TOKEN_TTL,
+    });
     //Tạo refreshToken duy trì đăng nhập
     const refreshToken = crypto.randomBytes(64).toString('hex');
     // Tạo session mới để lưu refresh token
@@ -79,14 +71,12 @@ export const signIn = async (req, res) => {
     //Trả refreshToken về trong cookie
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true, 
-      sameSite: 'none', 
+      secure: true,
+      sameSite: 'none',
       maxAge: REFRESH_TOKEN_TTL,
     });
     // Trả accessToken về trong res
-    return res
-      .status(200)
-      .json({ message: `User ${user.fullname} đã đăng nhập`, accessToken });
+    return res.status(200).json({ message: `User ${user.fullname} đã đăng nhập`, accessToken });
   } catch (error) {
     console.error('Có lỗi khi gọi signIn', error);
     return res.status(500).json({ message: 'Lỗi hệ thống!' });
