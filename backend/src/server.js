@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./libs/db.js";
-import { protectedRoute } from "./middlewares/authMiddleware.js";
+import { protectedRoute, protectedAdminRoute } from "./middlewares/authMiddleware.js";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import postRoute from "./routes/postRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 
 dotenv.config();
 
@@ -29,9 +30,10 @@ app.use(
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
 
+// admin route
+app.use("/api/admins", protectedAdminRoute, adminRoute);
 // private route
-app.use(protectedRoute);
-app.use("/api/users", userRoute);
+app.use("/api/users", protectedRoute, userRoute);
 
 // Running server
 connectDB().then(() => {

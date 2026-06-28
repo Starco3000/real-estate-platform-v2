@@ -8,7 +8,7 @@ import {
   updatePost,
   updateStatusPostByAdmin,
 } from "../controllers/postController.js";
-import { optionalAuth, protectedRoute, requireAdmin } from "../middlewares/authMiddleware.js";
+import { optionalAuth, protectedRoute, protectedAdminRoute } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -28,6 +28,6 @@ router.put("/:id", protectedRoute, updatePost);
 router.delete("/:id", protectedRoute, deletePost);
 
 /*** ADMIN ***/
-router.put('/admin/:id/update-status', protectedRoute, requireAdmin, updateStatusPostByAdmin )
+router.put('/admin/:id/update-status', protectedAdminRoute, updateStatusPostByAdmin )
 
 export default router;
