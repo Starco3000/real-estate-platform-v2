@@ -15,6 +15,7 @@ import UserManagementPage from "./pages/admins/UserManagementPage";
 import ProtectedAdminRoute from "./components/auths/ProtectedAdminRoute";
 import AdminSignInPage from "./pages/admins/AdminSignInPage";
 import { Navigate } from "react-router";
+import AdminLayout from "./pages/admins/AdminLayout";
 
 const routes = [
   {
@@ -45,10 +46,16 @@ const routes = [
         path: pathnames.admins.adminLayout,
         element: <ProtectedAdminRoute />,
         children: [
-          { path: pathnames.admins.dashboard, element: <Dashboard /> },
-          { path: pathnames.admins.publish, element: <PostPublishPage /> },
-          { path: pathnames.admins.verifiy, element: <PostVerifyPage /> },
-          { path: pathnames.admins.user, element: <UserManagementPage /> },
+          {
+            path: "",
+            element: <AdminLayout />,
+            children: [
+              { path: pathnames.admins.dashboard, element: <Dashboard /> },
+              { path: pathnames.admins.publish, element: <PostPublishPage /> },
+              { path: pathnames.admins.verifiy, element: <PostVerifyPage /> },
+              { path: pathnames.admins.user, element: <UserManagementPage /> },
+            ],
+          },
         ],
       },
     ],
