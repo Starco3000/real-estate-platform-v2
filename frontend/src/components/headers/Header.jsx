@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,13 +10,11 @@ import {
 } from "../ui/navigation-menu";
 import { navigationLinks } from "@/lib/constants";
 import { Button } from "../ui/button";
-import { ChevronDown, HeartIcon, Phone, Menu, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { ChevronDown, Phone, Menu, X, ArrowLeft } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { LoginForm } from "../auths/login-form";
 import { SignupForm } from "../auths/signup-form";
 import LogoMark from "../LogoMark";
-
-
 
 const Header = () => {
   const [mode, setMode] = useState("login");
@@ -24,6 +22,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -39,145 +38,112 @@ const Header = () => {
   }, [menuOpen]);
 
   return (
-    // <header
-    //   className={[
-    //     "sticky top-0 z-30 bg-background/90 backdrop-blur border-b border-border transition-shadow duration-300",
-    //     scrolled ? "shadow-md shadow-primary/5" : "shadow-none",
-    //   ].join(" ")}
-    // >
-    //   <div className='max-w-310 mx-auto px-4 lg:px-8 flex items-center justify-between py-3'>
-    //     <Link to='/' className='flex items-center gap-2.5 shrink-0'>
-    //       <img src='/logo2.png' alt='Kimdienhomes' className='h-14 w-auto' />
-    //     </Link>
-    //     <NavigationMenu className='space-x-4'>
-    //       <NavigationMenuList>
-    //         {navigationLinks.map((element) => (
-    //           <Fragment key={element.id}>
-    //             {element.hasSub && (
-    //               <NavigationMenuItem className='mx-1'>
-    //                 <NavigationMenuTrigger className='text-primary-foreground hover:text-accent'>
-    //                   {element.name}
-    //                 </NavigationMenuTrigger>
-    //                 <NavigationMenuContent className='flex flex-col min-w-80'>
-    //                   {element.subs.map((item) => (
-    //                     <NavigationMenuLink
-    //                       key={item.pathname}
-    //                       className='px-4 font-medium rounded-md hover:bg-accent cursor-pointer'
-    //                     >
-    //                       {item.name}
-    //                     </NavigationMenuLink>
-    //                   ))}
-    //                 </NavigationMenuContent>
-    //               </NavigationMenuItem>
-    //             )}
-
-    //             {!element.hasSub && (
-    //               <NavigationMenuItem>
-    //                 <NavigationMenuLink className='text-sm text-primary-foreground hover:text-accent font-medium cursor-default'>
-    //                   {element.name}
-    //                 </NavigationMenuLink>
-    //               </NavigationMenuItem>
-    //             )}
-    //           </Fragment>
-    //         ))}
-    //       </NavigationMenuList>
-    //     </NavigationMenu>
-    //   </div>
-    //   <div className='flex items-center space-x-2'>
-
-    //     <Dialog open={open} onOpenChange={setOpen}>
-    //       <DialogTrigger asChild>
-    //         <Button variant='ghost' size='lg' className='text-primary-foreground hover:text-accent'>
-    //           Đăng nhập
-    //         </Button>
-    //       </DialogTrigger>
-    //       <DialogContent showCloseButton={false} className='sm:max-w-xs min-w-3xl'>
-    //         <DialogTitle className='sr-only' />
-    //         {mode === "login" ? (
-    //           <LoginForm
-    //             switchtosignup={() => setMode("signup")}
-    //             onSuccess={() => setOpen(false)}
-    //           />
-    //         ) : (
-    //           <SignupForm switchtologin={() => setMode("login")} />
-    //         )}
-    //       </DialogContent>
-    //     </Dialog>
-
-    //     <Button
-    //       variant='ghost'
-    //       size='lg'
-    //       className='text-primary-foreground hover:text-accent border-border'
-    //     >
-    //       Đăng tin
-    //     </Button>
-    //   </div>
-    // </header>
-
     <header
       className={[
         "sticky top-0 z-30 bg-background/90 backdrop-blur border-b border-border transition-shadow duration-300",
         scrolled ? "shadow-md shadow-primary/5" : "shadow-none",
       ].join(" ")}
     >
-      <div className='max-w-310 mx-auto px-4 lg:px-8 flex items-center justify-between py-3'>
-        {/* Logo */}
-        <Link to='/' className='flex items-center gap-2.5 shrink-0'>
-          {/* <img src='/logo2.png' alt='Kimdienhomes' className='h-12 w-auto' /> */}
-          <LogoMark />
-          <div className='flex flex-col leading-tight'>
-            <span className="font-['Fraunces',serif] font-semibold text-[19px] text-[#16375E]">
+      {/* Các nút trên header mobile screen */}
+      <div className='flex lg:hidden items-center justify-between px-3 py-2'>
+        <button
+          type='button'
+          onClick={() => navigate(-1)}
+          aria-label='Quay lại'
+          className='p-2 -ml-1 text-primary shrink-0'
+        >
+          <ArrowLeft size={24} />
+        </button>
+
+        <Link to='/' className='flex items-center leading-none gap-2.5 shrink-0 sm:mx-auto'>
+          <LogoMark className="h-6.5 w-auto"/>
+         <div className="flex flex-col leading-tight">
+            <span className="mt-0.5 font-['Fraunces',serif] font-semibold text-[14px] leading-none text-[#16375E]">
               Kimdienhomes
             </span>
-            <span className='text-[9.5px] tracking-[0.09em] uppercase text-[#C69A54] font-semibold'>
+            <span className='text-[7px] tracking-[0.08em] uppercase text-[#C69A54] font-semibold'>
               Property &amp; Homes
             </span>
-          </div>
+         </div>
         </Link>
 
-        {/* Desktop nav */}
-        <NavigationMenu className='hidden lg:flex'>
-          <NavigationMenuList className='gap-1'>
-            {navigationLinks.map((element, index) => (
-              <Fragment key={element.id}>
-                {element.hasSub ? (
-                  <NavigationMenuItem className='mx-1'>
-                    <NavigationMenuTrigger
-                      className={[
-                        "relative pb-1 text-base font-medium text-[#241F19] transition-all duration-300",
-                        "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-[#C69A54] after:content-[''] after:transition-transform after:duration-200 hover:bg-transparent hover:text-[#16375E] hover:after:scale-x-100 data-[state=open]:text-[#16375E] data-[state=open]:after:scale-x-100",
-                      ].join(" ")}
-                    >
-                      {element.name}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent className='flex flex-col min-w-64 p-2'>
-                      {element.subs.map((item) => (
-                        <NavigationMenuLink
-                          key={item.pathname}
-                          className='px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors'
-                        >
-                          {item.name}
-                        </NavigationMenuLink>
-                      ))}
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                ) : (
-                  <NavigationMenuItem>
-                    <NavigationMenuLink
-                      className={[
-                        "relative px-3 py-2 text-base font-medium text-[#241F19] transition-all duration-300",
-                        "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#C69A54] after:content-[''] after:transition-transform after:duration-200 hover:bg-transparent hover:text-[#16375E] hover:after:scale-x-100",
-                      ].join(" ")}
-                    >
-                      {element.name}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                )}
-              </Fragment>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+        {/* Nút mở menu mobile */}
+        <button
+          type='button'
+          className='p-2 -mr-1 text-primary shrink-0'
+          aria-label={menuOpen ? "Đóng menu" : "Mở menu"}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span
+            className={[
+              "block transition-transform duration-300",
+              menuOpen ? "rotate-90" : "rotate-0",
+            ].join(" ")}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </span>
+        </button>
+      </div>
 
+      {/* Desktop screen */}
+      <div className='hidden lg:flex max-w-full mx-auto px-4 items-center justify-between py-3'>
+        <div className='flex gap-x-5'>
+          {/* Logo */}
+          <Link to='/' className='flex items-center gap-2.5 shrink-0 sm:mx-auto'>
+            <LogoMark />
+            <div className='flex flex-col leading-tight'>
+              <span className="font-['Fraunces',serif] font-semibold text-[19px] text-[#16375E]">
+                Kimdienhomes
+              </span>
+              <span className='text-[9.5px] tracking-[0.09em] uppercase text-[#C69A54] font-semibold'>
+                Property &amp; Homes
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop nav */}
+          <NavigationMenu viewport={false} className='hidden lg:flex'>
+            <NavigationMenuList className='gap-1'>
+              {navigationLinks.map((element, index) => (
+                <Fragment key={element.id}>
+                  {element.hasSub ? (
+                    <NavigationMenuItem className='mx-1'>
+                      <NavigationMenuTrigger
+                        className={[
+                          "relative pb-1 text-sm font-medium text-[#241F19] transition-all duration-300",
+                          "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:origin-left after:scale-x-0 after:bg-[#C69A54] after:content-[''] after:transition-transform after:duration-200 hover:bg-transparent hover:text-[#16375E] hover:after:scale-x-100 data-[state=open]:text-[#16375E] data-[state=open]:after:scale-x-100",
+                        ].join(" ")}
+                      >
+                        {element.name}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent className='flex flex-col min-w-64 p-2'>
+                        {element.subs.map((item) => (
+                          <NavigationMenuLink
+                            key={item.pathname}
+                            className='px-3 py-2 text-sm font-medium rounded-md text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors'
+                          >
+                            {item.name}
+                          </NavigationMenuLink>
+                        ))}
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  ) : (
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        className={[
+                          "relative pb-1 text-sm font-medium text-[#241F19] transition-all duration-300",
+                          "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:origin-left after:scale-x-0 after:bg-[#C69A54] after:content-[''] after:transition-transform after:duration-200 hover:bg-transparent hover:text-[#16375E] hover:after:scale-x-100 data-[state=open]:text-[#16375E] data-[state=open]:after:scale-x-100 cursor-default",
+                        ].join(" ")}
+                      >
+                        {element.name}
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  )}
+                </Fragment>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
         {/* Right actions */}
         <div className='flex items-center gap-2'>
           <div className='hidden lg:flex items-center gap-2 text-[13.5px] font-semibold text-[#16375E]'>
@@ -213,24 +179,7 @@ const Header = () => {
             className='hidden p-3.5 sm:inline-flex bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0'
           >
             Đăng tin
-          </Button>
-
-          {/* Mobile menu toggle */}
-          <button
-            type='button'
-            className='lg:hidden text-primary p-2 -mr-2'
-            aria-label={menuOpen ? "Đóng menu" : "Mở menu"}
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <span
-              className={[
-                "block transition-transform duration-300",
-                menuOpen ? "rotate-90" : "rotate-0",
-              ].join(" ")}
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </span>
-          </button>
+          </Button> 
         </div>
       </div>
 
@@ -273,7 +222,7 @@ const Header = () => {
                     className={[
                       "overflow-hidden transition-all duration-300",
                       mobileSubmenuOpen === element.id
-                        ? "max-h-96 opacity-100"
+                        ? "max-h-96 opacity-100 overflow-y-scroll"
                         : "max-h-0 opacity-0",
                     ].join(" ")}
                   >
@@ -299,7 +248,7 @@ const Header = () => {
             </div>
           ))}
 
-          <div className='flex flex-col gap-2 p-auto sm:hidden'>
+          <div className='flex flex-col gap-2 p-auto mx-2 my-1 sm:hidden'>
             <Button
               variant='outline'
               className='w-full border-border text-foreground'
